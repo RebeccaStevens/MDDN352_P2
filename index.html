@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+  <script src="app.js"></script>
+  
+  <link rel="stylesheet" href="app.css">
+  
+  <link rel="import" href="elements/entity-bone-model/entity-bone-model.html">
+  <link rel="import" href="elements/model-bone/model-bone.html">
+  
+  <title>MDDN 352 Project 2</title>
+  
+  <style>
+    body{
+      background: #444444;
+      overflow: hidden;
+    }
+    #frame{
+      margin:0 auto;
+      width:1024px;
+      height:768px;
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body fullbleed unresolved layout vertical>
+  
+  <polymer-element name="page-wrapper">
+	  <template>
+	    <style>
+	    :host{
+	      position: relative;
+	    }
+	    </style>
+      <entity-bone-model id="entity1" x="0" y="0" class="show-bones">
+        <model-bone length="50" angle="90">
+          <model-bone length="150" angle="30">
+            <model-bone length="150" angle="-30"></model-bone>
+          </model-bone>
+          <model-bone length="150" angle="-30">
+            <model-bone length="150" angle="30"></model-bone>
+          </model-bone>
+          <model-bone length="200" angle="0">
+            <model-bone length="200" angle="15">
+              <model-bone length="200" angle="-15"></model-bone>
+            </model-bone>
+            <model-bone length="200" angle="-15">
+              <model-bone length="200" angle="15"></model-bone>
+            </model-bone>
+          </model-bone>
+        </model-bone>
+      </entity-bone-model>
+	  </template>
+	  <script>
+		  Polymer({
+			  entities: [],
+			  ready: function(){
+				  this.entities = this.shadowRoot.querySelectorAll('entity-bone-model');
+				  this.$.entity1.vel_x = 100;
+				  
+		      var animate = function(app, startTime) {
+		    	  var time_stamp = (new Date()).getTime(); 
+	          var time_step = (time_stamp - startTime) / 1000;
+	          
+	          for(var i=0; i<app.entities.length; i++){
+	        	  app.entities[i].animate(time_step, 0.1);
+	          }
+
+	          // request new frame
+	          requestAnimFrame(function() {
+	            animate(app, time_stamp);
+	          });
+	        };
+	        
+	        animate(this, (new Date()).getTime());
+			  }
+			});
+		</script>
+	</polymer-element>
+	
+	<div flex></div>
+  <div id="frame">
+	  <page-wrapper></page-wrapper>
+	</div>
+	<div flex></div>
+</body>
+</html>

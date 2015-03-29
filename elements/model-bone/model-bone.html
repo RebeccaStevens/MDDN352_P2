@@ -1,0 +1,61 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="model-bone" attributes="length angle">
+  <template>
+<style>
+:host{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: {{length}}px;
+  height: 0;
+  overflow: visible;
+}
+#rotator{
+  -ms-transform: rotate({{angle}}deg);
+  -webkit-transform: rotate({{angle}}deg);
+  transform: rotate({{angle}}deg);
+  -ms-transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+#children{
+  -ms-transform: translate({{length}}px, 0);
+  -webkit-transform: translate({{length}}px, 0);
+  transform: translate({{length}}px, 0);
+  -ms-transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+svg{
+  display: none;
+  width: {{length}}px;
+  height: 1px;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+line,
+circle{
+  stroke: #ff0000;
+  stroke-width: 5px; 
+  fill: #ff0000;
+}
+</style>
+    <div id="rotator">
+	    <svg>
+	      <line x1="0" y1="0" x2="{{length}}" y2="0" />
+	      <circle x="0" y="0" r="5" />
+	    </svg>
+	    <div id="children">
+        <content select="model-bone"></content>
+      </div>
+	  </div>
+  </template>
+  <script src="model-bone.js"></script>
+</polymer-element>
