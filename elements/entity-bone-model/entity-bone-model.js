@@ -28,10 +28,10 @@ Polymer({
 			this.y += this.accel_y * time_step / friction + (this.vel_y - this.accel_y / friction) * (1 - Math.exp(-friction * time_step)) / friction
 			this.vel_x = this.accel_x / friction + (this.vel_x - this.accel_x / friction) * Math.exp(-friction * time_step);
 			this.vel_y = this.accel_y / friction + (this.vel_y - this.accel_y / friction) * Math.exp(-friction * time_step);
-			if(this.vel_x < 0.0000000000001){
+			if(Math.abs(this.vel_x) < 0.0000000000001){
 				this.vel_x = 0;
 			}
-			if(this.vel_y < 0.0000000000001){
+			if(Math.abs(this.vel_y) < 0.0000000000001){
 				this.vel_y = 0;
 			}
 		}

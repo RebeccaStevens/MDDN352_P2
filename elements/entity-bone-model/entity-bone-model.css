@@ -4,7 +4,3 @@
 	left: {{x}}px;
 	top: {{y}}px;
 }
-polyfill-next-selector { content: ':host(.show-bones) model-bone::shadow svg' }
-:host(.show-bones) ::content model-bone::shadow svg{
-  display: block;
-}

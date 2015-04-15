@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../entity-bone-model/entity-bone-model.html">
+<link rel="import" href="../model-bone/model-bone.html">
+
+<polymer-element name="car-1" extends="entity-bone-model">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+		:host(.show-bones) model-bone::shadow svg{
+		  display: block;
+		}
+		img{
+		  position: absolute;
+		}
+		#body > img{
+		  top: -300px;
+		  left: -55px;
+		}
+    #fwheel > img,
+    #rwheel > img{
+      top: -31px;
+      left: -27px;
+    }
+    #rwheel{
+      left: 257px;
+      top: -2px;
+    }
+    </style>
+    <model-bone id="body" length="257" angle="0">
+      <img src="../../images/car-1-body.png">
+      <model-bone id="fwheel" length="30" angle="0">
+        <img src="../../images/car-1-f-wheel.png">
+      </model-bone>
+      <model-bone id="rwheel" length="30" angle="0">
+        <img src="../../images/car-1-r-wheel.png">
+      </model-bone>
+    </model-bone>
+  </template>
+  <script>
+    Polymer({
+      ready: function(){
+    	  this.super();
+      },
+      animate: function(time_step, friction){
+    	  this.super([time_step, friction]);
+    	  this.$.fwheel.angle += this.vel_x * time_step * 2.5;
+    	  this.$.rwheel.angle += this.vel_x * time_step * 2.5;
+      }
+    });
+  </script>
+</polymer-element>

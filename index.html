@@ -12,8 +12,8 @@
   
   <link rel="stylesheet" href="app.css">
   
-  <link rel="import" href="elements/entity-bone-model/entity-bone-model.html">
-  <link rel="import" href="elements/model-bone/model-bone.html">
+  <link rel="import" href="bower_components/polymer/polymer.html">
+  <link rel="import" href="elements/vehicles/car-1.html">
   
   <title>MDDN 352 Project 2</title>
   
@@ -27,6 +27,7 @@
       width:1024px;
       height:768px;
       background: #ffffff;
+      /*overflow: hidden;*/
     }
   </style>
 </head>
@@ -34,36 +35,19 @@
   
   <polymer-element name="page-wrapper">
 	  <template>
-	    <style>
-	    :host{
-	      position: relative;
-	    }
-	    </style>
-      <entity-bone-model id="entity1" x="0" y="0" class="show-bones">
-        <model-bone length="50" angle="90">
-          <model-bone length="150" angle="30">
-            <model-bone length="150" angle="-30"></model-bone>
-          </model-bone>
-          <model-bone length="150" angle="-30">
-            <model-bone length="150" angle="30"></model-bone>
-          </model-bone>
-          <model-bone length="200" angle="0">
-            <model-bone length="200" angle="15">
-              <model-bone length="200" angle="-15"></model-bone>
-            </model-bone>
-            <model-bone length="200" angle="-15">
-              <model-bone length="200" angle="15"></model-bone>
-            </model-bone>
-          </model-bone>
-        </model-bone>
-      </entity-bone-model>
+	    <car-1 id="car1" x="600" y="600"></car-1>
 	  </template>
 	  <script>
 		  Polymer({
 			  entities: [],
 			  ready: function(){
-				  this.entities = this.shadowRoot.querySelectorAll('entity-bone-model');
-				  this.$.entity1.vel_x = 100;
+				  this.entities.push(this.$.car1);
+				  
+				  this.entities.forEach(function(element, index, array){
+					  element.classList.add('show-bones');
+				  });
+				  
+				  this.$.car1.vel_x = -200;
 				  
 		      var animate = function(app, startTime) {
 		    	  var time_stamp = (new Date()).getTime(); 
