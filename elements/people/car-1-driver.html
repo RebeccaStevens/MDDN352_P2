@@ -1,0 +1,46 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../entity-bone-model/entity-bone-model.html">
+<link rel="import" href="../model-bone/model-bone.html">
+
+<polymer-element name="car-1-driver" extends="entity-bone-model">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+		:host(.show-bones) model-bone::shadow svg{
+		  display: block;
+		}
+    img{
+      position: absolute;
+    }
+    #root > img{
+      left: -141px;
+      top: -195px;
+    }
+    </style>
+    
+    <model-bone id="root" length="0" angle="0">
+	    <img src="../../images/car-1-driver-whole.png">
+	    <model-bone id="neck" length="50" angle="-135"></model-bone>
+	    <model-bone id="spine" length="25" angle="90">
+	      <model-bone id="l-arm-upper" length="30" angle="70">
+          <model-bone id="l-arm-lower" length="45" angle="60">
+            <model-bone id="l-wrist" length="20" angle="20">
+            </model-bone>
+          </model-bone>
+        </model-bone>
+	    </model-bone>
+	  </model-bone>
+  </template>
+  <script>
+    Polymer({
+      ready: function(){
+    	  this.super();
+      },
+      animate: function(time_step){
+    	  this.super([time_step, 0]);
+      }
+    });
+  </script>
+</polymer-element>

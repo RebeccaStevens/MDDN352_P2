@@ -24,19 +24,21 @@
       left: -27px;
     }
     #rwheel{
-      left: 257px;
       top: -2px;
     }
     </style>
-    <model-bone id="body" length="257" angle="0">
-      <img src="../../images/car-1-body.png">
-      <model-bone id="fwheel" length="30" angle="0">
+    <model-bone id="root" length="0" angle="0">
+      <content></content>
+	    <model-bone id="body" length="257" angle="0">
+	      <img src="../../images/car-1-body.png">
+	      <model-bone id="rwheel" length="30" angle="0">
+	        <img src="../../images/car-1-r-wheel.png">
+	      </model-bone>
+	    </model-bone>
+	    <model-bone id="fwheel" length="30" angle="0">
         <img src="../../images/car-1-f-wheel.png">
       </model-bone>
-      <model-bone id="rwheel" length="30" angle="0">
-        <img src="../../images/car-1-r-wheel.png">
-      </model-bone>
-    </model-bone>
+	  </model-bone>
   </template>
   <script>
     Polymer({

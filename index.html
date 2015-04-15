@@ -14,6 +14,7 @@
   
   <link rel="import" href="bower_components/polymer/polymer.html">
   <link rel="import" href="elements/vehicles/car-1.html">
+  <link rel="import" href="elements/people/car-1-driver.html">
   
   <title>MDDN 352 Project 2</title>
   
@@ -35,7 +36,9 @@
   
   <polymer-element name="page-wrapper">
     <template>
-      <car-1 id="car1" x="700" y="600"></car-1>
+      <car-1 data-type="entity" id="car1" x="700" y="600">
+        <car-1-driver data-type="entity" x="190" y="-105"></car-1-driver>
+      </car-1>
     </template>
     <script>
       Polymer({
@@ -79,7 +82,7 @@
           
         },
         ready: function(){
-          this.entities.push(this.$.car1);
+        	this.entities = this.shadowRoot.querySelectorAll('[data-type="entity"]').array();
           
           this.entities.forEach(function(element, index, array){
             element.classList.add('show-bones');
