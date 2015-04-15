@@ -46,7 +46,7 @@
           var time_step = (time_stamp - startTime) / 1000;
           
           for(var i=0; i<this.entities.length; i++){
-        	  this.entities[i].animate(time_step, 0.1);
+        	  this.entities[i].animate(time_step);
           }
           
           switch(this.pageNumber){
