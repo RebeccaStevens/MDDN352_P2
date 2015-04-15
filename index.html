@@ -37,48 +37,53 @@
   <polymer-element name="page-wrapper">
     <template>
       <car-1 data-type="entity" id="car1" x="700" y="600">
-        <car-1-driver data-type="entity" x="190" y="-105"></car-1-driver>
+        <img body src="../../images/car-1-body.png">
+        <img front-wheel src="../../images/car-1-f-wheel.png">
+        <img rear-wheel src="../../images/car-1-r-wheel.png">
+        <car-1-driver data-type="entity" x="245" y="205"></car-1-driver>
       </car-1>
     </template>
     <script>
       Polymer({
         entities: [],
         pageNumber: 0,
-        animate: function(startTime) {
-          var time_stamp = (new Date()).getTime(); 
-          var time_step = (time_stamp - startTime) / 1000;
+        time_stamp: 0,
+        time_step: 0,
+        start_time: 0,
+        animate: function(frame_start_time) {
+          this.time_stamp = (new Date()).getTime(); 
+          this.time_step = (this.time_stamp - frame_start_time) / 1000;
           
-          for(var i=0; i<this.entities.length; i++){
-        	  this.entities[i].animate(time_step);
-          }
+          //for(var i=0; i<this.entities.length; i++){
+        	//  this.entities[i].animate(this);
+          //}
           
           switch(this.pageNumber){
 	          case 1:
-	        	  this.animatePage1(time_step);
+	        	  this.animatePage1();
 	        	  break;
 	          case 2:
-              this.animatePage2(time_step);
+              this.animatePage2();
               break;
           }
           
           // request the next frame
           var $this = this;
           requestAnimFrame(function() {
-            $this.animate(time_stamp);
+            $this.animate($this.time_stamp);
           });
         },
         transitionToPage1: function(){
           this.pageNumber = 1;
         },
-        animatePage1: function(time_step){
-        	this.$.car1.animateFrontWheel(time_step, -250);
-          this.$.car1.animateRearWheel(time_step, -250);
+        animatePage1: function(){
+        	this.$.car1.animateDrive(this, -100);
         },
         transitionToPage2: function(){
           this.pageNumber = 2;
           //this.$.car1.vel_x = -200;
         },
-        animatePage2: function(time_step){
+        animatePage2: function(){
           
         },
         ready: function(){
@@ -89,7 +94,8 @@
           });
           
           this.transitionToPage1();
-          this.animate((new Date()).getTime());
+          this.start_time = (new Date()).getTime();
+          this.animate(this.start_time);
         }
       });
     </script>

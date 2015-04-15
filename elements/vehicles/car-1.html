@@ -11,51 +11,71 @@
 		:host(.show-bones) model-bone::shadow svg{
 		  display: block;
 		}
-		img{
+		#body{
+      position: absolute;
+    }
+		#body > .content{
 		  position: absolute;
+      left: {{bodyOffsetX - 55}}px;
+      top: {{bodyOffsetY - 300}}px;
 		}
-		#body > img{
-		  top: -300px;
-		  left: -55px;
-		}
-    #fwheel > img,
-    #rwheel > img{
+		polyfill-next-selector { content: ':host *' }
+    ::content * {
+      position: absolute;
+    }
+		polyfill-next-selector { content: '#fwheel > [front-wheel]' }
+    #fwheel ::content > [front-wheel]{
       top: -31px;
       left: -27px;
     }
-    #rwheel{
-      top: -2px;
+    polyfill-next-selector { content: '#rwheel > [rear-wheel]' }
+    #rwheel ::content > [rear-wheel]{
+      top: -29px;
+      left: -27px;
     }
     </style>
     <model-bone id="root" length="0" angle="0">
-      <content></content>
 	    <model-bone id="body" length="257" angle="0">
-	      <img src="../../images/car-1-body.png">
+	      <div class="content">
+	        <content select=":not([body]):not([front-wheel]):not([rear-wheel])"></content>
+	        <content select="[body]"></content>
+	      </div>
 	      <model-bone id="rwheel" length="30" angle="0">
-	        <img src="../../images/car-1-r-wheel.png">
+	        <content select="[rear-wheel]"></content>
 	      </model-bone>
 	    </model-bone>
 	    <model-bone id="fwheel" length="30" angle="0">
-        <img src="../../images/car-1-f-wheel.png">
+	      <content select="[front-wheel]"></content>
       </model-bone>
 	  </model-bone>
   </template>
   <script>
     Polymer({
+    	bodyOffsetX: 0,
+    	bodyOffsetY: 0,
       ready: function(){
     	  this.super();
       },
-      animate: function(time_step){
-    	  this.super([time_step, 0]);
-    	  this.animateFrontWheel(time_step, 2.5 * this.vel_x);
-    	  this.animateRearWheel (time_step, 2.5 * this.vel_x);
+      animate: function(app){
+    	  this.super([app.time_step, 0]);
+    	  this.animateDrive(app, this.vel_x);
       },
-      animateFrontWheel: function(time_step, speed){
-    	  this.$.fwheel.angle += speed * time_step;
+      animateDrive: function(app, speed){
+    	  this.animateFrontWheel(app, 2.5 * speed);
+        this.animateRearWheel(app, 2.5 * speed);
+        this.animateBody(app);
       },
-      animateRearWheel: function(time_step, speed){
-        this.$.rwheel.angle += speed * time_step;
+      animateFrontWheel: function(app, speed){
+    	  this.$.fwheel.angle += speed * app.time_step;
       },
+      animateRearWheel: function(app, speed){
+        this.$.rwheel.angle += speed * app.time_step;
+      },
+      animateBody: function(app){
+    	  var amplitude = 3;
+    	  var oscillation_factor = 0.020;
+        this.bodyOffsetY = amplitude * Math.sin((app.time_stamp - app.start_time) * oscillation_factor);
+      }
     });
   </script>
 </polymer-element>
