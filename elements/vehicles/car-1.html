@@ -43,11 +43,17 @@
       ready: function(){
     	  this.super();
       },
-      animate: function(time_step, friction){
-    	  this.super([time_step, friction]);
-    	  this.$.fwheel.angle += this.vel_x * time_step * 2.5;
-    	  this.$.rwheel.angle += this.vel_x * time_step * 2.5;
-      }
+      animate: function(time_step){
+    	  this.super([time_step, 0]);
+    	  this.animateFrontWheel(time_step, 2.5 * this.vel_x);
+    	  this.animateRearWheel (time_step, 2.5 * this.vel_x);
+      },
+      animateFrontWheel: function(time_step, speed){
+    	  this.$.fwheel.angle += speed * time_step;
+      },
+      animateRearWheel: function(time_step, speed){
+        this.$.rwheel.angle += speed * time_step;
+      },
     });
   </script>
 </polymer-element>

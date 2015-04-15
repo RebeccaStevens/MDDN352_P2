@@ -34,45 +34,68 @@
 <body fullbleed unresolved layout vertical>
   
   <polymer-element name="page-wrapper">
-	  <template>
-	    <car-1 id="car1" x="600" y="600"></car-1>
-	  </template>
-	  <script>
-		  Polymer({
-			  entities: [],
-			  ready: function(){
-				  this.entities.push(this.$.car1);
-				  
-				  this.entities.forEach(function(element, index, array){
-					  element.classList.add('show-bones');
-				  });
-				  
-				  this.$.car1.vel_x = -200;
-				  
-		      var animate = function(app, startTime) {
-		    	  var time_stamp = (new Date()).getTime(); 
-	          var time_step = (time_stamp - startTime) / 1000;
-	          
-	          for(var i=0; i<app.entities.length; i++){
-	        	  app.entities[i].animate(time_step, 0.1);
-	          }
-
-	          // request new frame
-	          requestAnimFrame(function() {
-	            animate(app, time_stamp);
-	          });
-	        };
-	        
-	        animate(this, (new Date()).getTime());
-			  }
-			});
-		</script>
-	</polymer-element>
-	
-	<div flex></div>
+    <template>
+      <car-1 id="car1" x="700" y="600"></car-1>
+    </template>
+    <script>
+      Polymer({
+        entities: [],
+        pageNumber: 0,
+        animate: function(startTime) {
+          var time_stamp = (new Date()).getTime(); 
+          var time_step = (time_stamp - startTime) / 1000;
+          
+          for(var i=0; i<this.entities.length; i++){
+        	  this.entities[i].animate(time_step, 0.1);
+          }
+          
+          switch(this.pageNumber){
+	          case 1:
+	        	  this.animatePage1(time_step);
+	        	  break;
+	          case 2:
+              this.animatePage2(time_step);
+              break;
+          }
+          
+          // request the next frame
+          var $this = this;
+          requestAnimFrame(function() {
+            $this.animate(time_stamp);
+          });
+        },
+        transitionToPage1: function(){
+          this.pageNumber = 1;
+        },
+        animatePage1: function(time_step){
+        	this.$.car1.animateFrontWheel(time_step, -250);
+          this.$.car1.animateRearWheel(time_step, -250);
+        },
+        transitionToPage2: function(){
+          this.pageNumber = 2;
+          //this.$.car1.vel_x = -200;
+        },
+        animatePage2: function(time_step){
+          
+        },
+        ready: function(){
+          this.entities.push(this.$.car1);
+          
+          this.entities.forEach(function(element, index, array){
+            element.classList.add('show-bones');
+          });
+          
+          this.transitionToPage1();
+          this.animate((new Date()).getTime());
+        }
+      });
+    </script>
+  </polymer-element>
+  
+  <div flex></div>
   <div id="frame">
-	  <page-wrapper></page-wrapper>
-	</div>
-	<div flex></div>
+    <page-wrapper></page-wrapper>
+  </div>
+  <div flex></div>
 </body>
 </html>
