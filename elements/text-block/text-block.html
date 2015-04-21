@@ -1,0 +1,20 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="text-block" attributes="x y width height size" noscript>
+  <template>
+<style>
+:host{
+  display: block;
+  position: absolute;
+  left: {{x}}px;
+  top: {{y}}px;
+  width: {{width}}px;
+  height: {{height}}px;
+  font-family: Bodoni, "Bodoni MT", "Times New Roman", Times, serif;
+  font-style: normal;
+  font-size: {{size}}em;
+}
+</style>
+    <content></content>
+  </template>
+</polymer-element>

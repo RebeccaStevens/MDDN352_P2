@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="app.css">
   
   <link rel="import" href="bower_components/polymer/polymer.html">
+  <link rel="import" href="elements/text-block/text-block.html">
   <link rel="import" href="elements/vehicles/car-1.html">
   <link rel="import" href="elements/people/car-1-driver.html">
   
@@ -30,17 +31,29 @@
       background: #ffffff;
       /*overflow: hidden;*/
     }
+    page-wrapper /deep/ * {
+      border: solid 1px red;
+    }
   </style>
 </head>
 <body fullbleed unresolved layout vertical>
   
   <polymer-element name="page-wrapper">
     <template>
+      <style>
+      :host{
+        position: relative;
+      }
+      </style>
+      <text-block x="200" y="555" width="300" height="30" size="1.2">Leo Timmers and Gecko Press</text-block>
+      <text-block x="500" y="555" width="100" height="30" size="1.2">present</text-block>
       <car-1 data-type="entity" id="car1" x="700" y="600">
         <img body src="images/car-1-body.png">
         <img front-wheel src="images/car-1-f-wheel.png">
         <img rear-wheel src="images/car-1-r-wheel.png">
-        <car-1-driver data-type="entity" x="245" y="205"></car-1-driver>
+        <car-1-driver data-type="entity" x="242" y="192">
+          <img driver src="images/car-1-driver-whole.png">
+        </car-1-driver>
       </car-1>
     </template>
     <script>

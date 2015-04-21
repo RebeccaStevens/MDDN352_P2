@@ -1,5 +1,4 @@
 :host{
-	display: block;
 	position: absolute;
 	left: {{x}}px;
 	top: {{y}}px;

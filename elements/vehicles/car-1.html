@@ -16,8 +16,8 @@
     }
 		#body > .content{
 		  position: absolute;
-      left: {{bodyOffsetX - 55}}px;
-      top: {{bodyOffsetY - 300}}px;
+      left: {{bodyOffsetX - 57}}px;
+      top: {{bodyOffsetY - 301}}px;
 		}
 		polyfill-next-selector { content: ':host *' }
     ::content * {
@@ -33,15 +33,20 @@
       top: -29px;
       left: -27px;
     }
+    #rwheel{
+      position: absolute;
+      top: -7px;
+    }
     </style>
     <model-bone id="root" length="0" angle="0">
-	    <model-bone id="body" length="257" angle="0">
+	    <model-bone id="body" length="255" angle="0">
 	      <div class="content">
 	        <content select=":not([body]):not([front-wheel]):not([rear-wheel])"></content>
 	        <content select="[body]"></content>
 	      </div>
 	      <model-bone id="rwheel" length="30" angle="0">
-	        <content select="[rear-wheel]"></content>
+	          <content select="[rear-wheel]"></content>
+	        </div>
 	      </model-bone>
 	    </model-bone>
 	    <model-bone id="fwheel" length="30" angle="0">
@@ -72,8 +77,8 @@
         this.$.rwheel.angle += speed * app.time_step;
       },
       animateBody: function(app){
-    	  var amplitude = 3;
-    	  var oscillation_factor = 0.020;
+    	  var amplitude = 4;
+    	  var oscillation_factor = 0.015;
         this.bodyOffsetY = amplitude * Math.sin((app.time_stamp - app.start_time) * oscillation_factor);
       }
     });

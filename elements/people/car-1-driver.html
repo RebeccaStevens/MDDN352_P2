@@ -11,23 +11,24 @@
 		:host(.show-bones) model-bone::shadow svg{
 		  display: block;
 		}
-    img{
+    polyfill-next-selector { content: ':host *' }
+    ::content * {
       position: absolute;
     }
-    #root > img{
+    polyfill-next-selector { content: '#root > [driver]' }
+    #root ::content > [driver]{
       left: -141px;
       top: -195px;
     }
     </style>
     
     <model-bone id="root" length="0" angle="0">
-	    <img src="../../images/car-1-driver-whole.png">
+	    <content select="[driver]"></content>
 	    <model-bone id="neck" length="50" angle="-135"></model-bone>
 	    <model-bone id="spine" length="25" angle="90">
 	      <model-bone id="l-arm-upper" length="30" angle="70">
           <model-bone id="l-arm-lower" length="45" angle="60">
-            <model-bone id="l-wrist" length="20" angle="20">
-            </model-bone>
+            <model-bone id="l-wrist" length="20" angle="20"></model-bone>
           </model-bone>
         </model-bone>
 	    </model-bone>
