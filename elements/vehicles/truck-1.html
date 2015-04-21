@@ -1,0 +1,69 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../entity-bone-model/entity-bone-model.html">
+<link rel="import" href="../model-bone/model-bone.html">
+
+<polymer-element name="truck-1" extends="entity-bone-model">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+		:host(.show-bones) model-bone::shadow svg{
+		  display: block;
+		}
+		#body{
+      position: absolute;
+    }
+		#body > .content{
+		  position: absolute;
+      left: {{bodyOffsetX + 30}}px;
+      top: {{bodyOffsetY - 75}}px;
+		}
+		polyfill-next-selector { content: ':host *' }
+    ::content * {
+      position: absolute;
+    }
+    polyfill-next-selector { content: '#wheel > [wheel]' }
+    #wheel ::content > [wheel]{
+      top: -31px;
+      left: -27px;
+    }
+    </style>
+    <model-bone id="root" length="0" angle="0">
+	    <model-bone id="body" length="40" angle="0">
+	      <div class="content">
+	        <content select=":not([body]):not([wheel])"></content>
+	        <content select="[body]"></content>
+	      </div>
+	      <model-bone id="wheel" length="30" angle="0">
+	        <content select="[wheel]"></content>
+	      </model-bone>
+	    </model-bone>
+	  </model-bone>
+  </template>
+  <script>
+    Polymer({
+    	bodyOffsetX: 0,
+    	bodyOffsetY: 0,
+      ready: function(){
+    	  this.super();
+      },
+      animate: function(app){
+    	  this.super([app.time_step, 0]);
+    	  this.animateDrive(app, this.vel_x);
+      },
+      animateDrive: function(app, speed){
+    	  this.animateWheel(app, 2.5 * speed);
+        this.animateBody(app);
+      },
+      animateWheel: function(app, speed){
+    	  this.$.wheel.angle += speed * app.time_step;
+      },
+      animateBody: function(app){
+    	  var amplitude = 4;
+    	  var oscillation_factor = 0.015;
+        this.bodyOffsetY = amplitude * Math.sin((app.time_stamp - app.start_time) * oscillation_factor);
+      }
+    });
+  </script>
+</polymer-element>
