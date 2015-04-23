@@ -36,11 +36,26 @@
   </template>
   <script>
     Polymer({
+    	_elbow: null,
+      _elbow_init_joint_angle: 0,
+    	_elbow_move_direction: 1,
+    	_elbow_max_angle_offset: 45,
       ready: function(){
     	  this.super();
+    	  this._elbow = this.$['l-arm-lower'];
+    	  this._elbow_init_angle = this._elbow.getInitialAngle()
       },
       animate: function(app){
     	  this.super([app.time_step, 0]);
+      },
+      animateElbow: function(app, speed, pause){
+    	  if(this._elbow.angle <= this._elbow_init_joint_angle){
+    		  this._elbow_move_direction *= -1;
+    	  }
+    	  else if(this._elbow.angle + this._elbow_max_angle_offset >= this._elbow_init_joint_angle){
+    		  this._elbow_move_direction *= -1;
+        }
+    	  this._elbow.angle += this._elbow_move_direction * speed * app.time_step;
       }
     });
   </script>

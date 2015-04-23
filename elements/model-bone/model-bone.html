@@ -57,5 +57,26 @@ circle{
       </div>
 	  </div>
   </template>
-  <script src="model-bone.js"></script>
+  <script>
+  Polymer({
+	  length: 1,
+	  angle: 0,
+	  _initLength: 1,
+	  _initAngle: 0,
+	  ready: function(){
+	    this._initLength = this.length;
+	    this._initAngle = this.angle;
+	  },
+	  getInitialLength: function(){
+		  return this._initLength;
+	  },
+    getInitialAngle: function(){
+      return this._initAngle;
+    },
+	  reset: function(){
+		  this.length = this.getInitialLength();
+      this.angle = this.getInitialAngle();
+	  }
+	});
+  </script>
 </polymer-element>

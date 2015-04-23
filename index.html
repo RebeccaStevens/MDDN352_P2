@@ -51,7 +51,7 @@
         <img body src="images/car-1-body.png">
         <img front-wheel src="images/car-1-f-wheel.png">
         <img rear-wheel src="images/car-1-r-wheel.png">
-        <car-1-driver data-type="entity" x="242" y="192">
+        <car-1-driver data-type="entity" id="car1-driver" x="245" y="195">
           <img driver src="images/car-1-driver-whole.png">
         </car-1-driver>
       </car-1>
@@ -91,6 +91,7 @@
         },
         animatePage1: function(){
         	this.$.car1.animateDrive(this, -100);
+        	//this.$['car1-driver'].animateElbow(this, -200, 1.5);
         },
         transitionToPage2: function(){
           this.pageNumber = 2;

@@ -27,11 +27,13 @@
     #fwheel ::content > [front-wheel]{
       top: -31px;
       left: -27px;
+      transform: scale({{fWheelScaleX}}, {{fWheelScaleY}});
     }
     polyfill-next-selector { content: '#rwheel > [rear-wheel]' }
     #rwheel ::content > [rear-wheel]{
       top: -29px;
       left: -27px;
+      transform: scale({{rWheelScaleX}}, {{rWheelScaleY}});
     }
     #rwheel{
       position: absolute;
@@ -58,6 +60,10 @@
     Polymer({
     	bodyOffsetX: 0,
     	bodyOffsetY: 0,
+      fWheelScaleX: 1,
+      fWheelScaleY: 1,
+    	rWheelScaleX: 1,
+    	rWheelScaleY: 1,
       ready: function(){
     	  this.super();
       },
@@ -72,9 +78,13 @@
       },
       animateFrontWheel: function(app, speed){
     	  this.$.fwheel.angle += speed * app.time_step;
+        //this.fWheelScaleX = 0.225 * Math.cos(this.$.fwheel.angle * Math.PI / 180 + Math.PI / 7) + 1.225;
+        //this.fWheelScaleY = 1 / this.fWheelScaleX;
       },
       animateRearWheel: function(app, speed){
         this.$.rwheel.angle += speed * app.time_step;
+        //this.rWheelScaleX = 0.225 * Math.cos(this.$.rwheel.angle * Math.PI / 180 + Math.PI / 7) + 1.225;
+        //this.rWheelScaleY = 1 / this.rWheelScaleX;
       },
       animateBody: function(app){
     	  var amplitude = 4;
