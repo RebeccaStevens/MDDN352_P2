@@ -5,9 +5,6 @@
 <polymer-element name="car-1" extends="entity-bone-model">
   <template>
     <style>
-    :host{
-      position: relative;
-    }
 		:host(.show-bones) model-bone::shadow svg{
 		  display: block;
 		}
@@ -89,6 +86,20 @@
     	  var amplitude = 4;
     	  var oscillation_factor = 0.015;
         this.bodyOffsetY = amplitude * Math.sin((app.time_stamp - app.start_time) * oscillation_factor);
+      },
+      moveLeft: function(app, x, vx, time_passed, total_time){
+    	  
+    	  if(time_passed >= total_time){
+    		  this.x = x;
+    	  }
+    	  else{
+    		  var easing = ((total_time - time_passed) / total_time);
+    		  easing = easing * easing;
+    		  this.x = x + (this.init_x-x) * easing;
+    		  this.vel_x = vx + (this.init_vel_x-vx) * easing;
+    	  }
+    	  
+    	  this.animateDrive(app, this.vel_x);
       }
     });
   </script>

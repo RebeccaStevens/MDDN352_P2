@@ -1,0 +1,104 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../entity-bone-model/entity-bone-model.html">
+<link rel="import" href="../model-bone/model-bone.html">
+
+<polymer-element name="trash-can" extends="entity-bone-model">
+  <template>
+    <style>
+		:host(.show-bones) model-bone::shadow svg{
+		  display: block;
+		}
+    polyfill-next-selector { content: ':host *' }
+    ::content * {
+      position: absolute;
+    }
+    polyfill-next-selector { content: '#root > [main]' }
+    #root ::content > [main]{
+      left: -58px;
+      top: -105px;
+    }
+    polyfill-next-selector { content: '#root > [lid]' }
+    #root ::content > [lid]{
+      left: -61px;
+      top: -32px;
+    }
+    </style>
+    
+    <model-bone id="root" length="0" angle="0">
+	    <content select="[main]"></content>
+	    <model-bone id="lid_pos" length="90" angle="-90">
+	      <model-bone id="lid_ang" length="0" angle="90">
+	        <content select="[lid]"></content>
+	      </model-bone>
+	    </model-bone>
+	  </model-bone>
+  </template>
+  <script>
+    Polymer({
+    	random_lid_angle: 0,
+    	random_base_angle: 0,
+      ready: function(){
+    	  this.super();
+      },
+      randomise: function(){
+    	  if(this.random_lid_angle == 0){
+          this.random_lid_angle  = (Math.random() * 10 + 5) * (Math.random() < 0.5 ? 1 : -1);
+          this.random_base_angle = (Math.random() *  5 + 5) * (Math.random() < 0.5 ? 1 : -1);
+          this.random_jump_height = Math.random() * 10 + 40;
+        }
+      },
+      animate: function(app){
+    	  this.super([app.time_step, 0]);
+      },
+      animateJump: function(app, x, time_passed, total_time){
+    	  this.randomise();
+        if(time_passed >= total_time){
+        	if(x !== false){
+	          this.x = this.init_x + x;
+        	}
+          this.y = this.init_y;
+          this.random_lid_angle = 0;
+        }
+        else{
+          var easing = (total_time - time_passed) / total_time;
+          if(x !== false){
+        	  this.x = this.init_x + x * (1-easing);
+          }
+          this.$.lid_pos.length = this.$.lid_pos.getInitialLength() + 30 * Math.sin(easing*Math.PI);
+          this.$.lid_ang.angle = this.$.lid_ang.getInitialAngle() + this.random_lid_angle * Math.sin(easing*Math.PI);
+          this.$.root.angle = this.$.root.getInitialAngle() + this.random_base_angle * Math.sin(easing*Math.PI);
+          this.y = this.init_y - this.random_jump_height * Math.sin(easing*Math.PI);
+        }
+      },
+      animateFall: function(app, y, time_passed, total_time_move, total_time_jump){
+    	  this.animate(app);
+          
+        this.randomise();
+        if(time_passed >= total_time_move){
+          this.x = this.init_x + x;
+          this.y = this.init_y;
+          this.random_lid_angle = 0;
+        }
+        else{
+          var easing = (total_time_move - time_passed) / total_time_move;
+          
+          this.$.lid_pos.length = this.$.lid_pos.getInitialLength() + 30 * Math.sin(easing*Math.PI);
+          this.$.lid_ang.angle = this.$.lid_ang.getInitialAngle() + this.random_lid_angle * Math.sin(easing*Math.PI);
+          this.$.root.angle = this.$.root.getInitialAngle() + this.random_base_angle * Math.sin(easing*Math.PI);
+        }
+        if(time_passed < total_time_jump){
+        	this.animateJump(app, false, time_passed, total_time_jump);
+        }
+        else{
+        	var easing = (total_time_move - time_passed) / (total_time_move - total_time_jump);
+        	console.log(easing);
+        	this.y = this.init_y + 2 * y * (1-easing);
+        	this.y = Math.min(this.y, this.init_y + y);
+        	
+        	// bounce
+        	//this.y = this.init_y + y - y / 2 * Math.sin((1-easing)*Math.PI);
+        }
+      }
+    });
+  </script>
+</polymer-element>

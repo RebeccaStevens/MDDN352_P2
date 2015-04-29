@@ -2,8 +2,78 @@
 
 <polymer-element name="entity-bone-model" attributes="x y vel_x vel_y">
   <template>
-    <link rel="stylesheet" href="entity-bone-model.css">
+    <style>
+    :host{
+		  position: absolute;
+		  left: {{x}}px;
+		  top: {{y}}px;
+		}
+		</style>
     <content select="model-bone"></content>
   </template>
-  <script src="entity-bone-model.js"></script>
+  <script>
+  Polymer({
+	  publish: {
+	    x: {
+	        value: 0,
+	        reflect: true
+	      },
+	      y: {
+	        value: 0,
+	        reflect: true
+	      },
+	      vel_x: 0,
+	      vel_y: 0,
+	      accel_x: 0,
+	      accel_y: 0,
+	      friction: 0,
+	      
+	      max_vel_x: 0,
+	      max_vel_y: 0,
+	      
+	      init_x: 0,
+	      init_y: 0,
+	      init_vel_x: 0,
+	      init_vel_y: 0,
+	      init_accel_x: 0,
+	      init_accel_y: 0,
+	      init_friction: 0
+	  },
+	  ready: function(){
+	    this.init_x = this.x;
+	    this.init_y = this.y
+	    this.init_vel_x = this.vel_x;
+	    this.init_vel_y = this.vel_y
+	    this.init_accel_x = this.accel_x;
+	    this.init_accel_y = this.accel_y;
+	    this.init_friction = this.friction;
+	  },
+	  setFriction: function(val){
+	    this.friction = val;
+	  },
+	  animate: function(time_step){
+	    if(this.friction == 0) {
+	      this.x += this.vel_x * time_step + 0.5 * this.accel_x * time_step * time_step;
+	      this.y += this.vel_y * time_step + 0.5 * this.accel_y * time_step * time_step;
+	      this.vel_x = this.vel_x + this.accel_x * time_step;
+	      this.vel_y = this.vel_y + this.accel_y * time_step;
+	    }
+	    else {
+	      this.x += this.accel_x * time_step / this.friction + (this.vel_x - this.accel_x / this.friction) * (1 - Math.exp(-this.friction * time_step)) / this.friction
+	      this.y += this.accel_y * time_step / this.friction + (this.vel_y - this.accel_y / this.friction) * (1 - Math.exp(-this.friction * time_step)) / this.friction
+	      this.vel_x = this.accel_x / this.friction + (this.vel_x - this.accel_x / this.friction) * Math.exp(-this.friction * time_step);
+	      this.vel_y = this.accel_y / this.friction + (this.vel_y - this.accel_y / this.friction) * Math.exp(-this.friction * time_step);
+	      if(Math.abs(this.vel_x) < 0.0000000000001){
+	        this.vel_x = 0;
+	      }
+	      if(Math.abs(this.vel_y) < 0.0000000000001){
+	        this.vel_y = 0;
+	      }
+	    }
+	    
+	    this.vel_x = Math.max(Math.min(this.vel_x, this.max_vel_x), -this.max_vel_x);
+	    this.vel_y = Math.max(Math.min(this.vel_y, this.max_vel_y), -this.max_vel_y);
+	  }
+	});
+  </script>
 </polymer-element>

@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<polymer-element name="text-block" attributes="x y width height size" noscript>
+<polymer-element name="text-block" attributes="x y width height fontsize" noscript>
   <template>
 <style>
 :host{
@@ -12,7 +12,16 @@
   height: {{height}}px;
   font-family: Bodoni, "Bodoni MT", "Times New Roman", Times, serif;
   font-style: normal;
-  font-size: {{size}}em;
+  font-size: {{fontsize}}em;
+}
+:host([leftalign]){
+  text-align: left;
+}
+:host([centeralign]){
+  text-align: center;
+}
+:host([rightalign]){
+  text-align: right;
 }
 </style>
     <content></content>

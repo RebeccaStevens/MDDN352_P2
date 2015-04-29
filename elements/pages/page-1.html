@@ -1,0 +1,181 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../hint-box/hint-box.html">
+<link rel="import" href="../text-block/text-block.html">
+<link rel="import" href="../road-line/road-line.html">
+<link rel="import" href="../vehicles/car-1.html">
+<link rel="import" href="../people/car-1-driver.html">
+<link rel="import" href="../vehicles/truck-1.html">
+<link rel="import" href="../objects/trash-can.html">
+
+<polymer-element name="page-1" attributes="parent">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+    .hide{
+      opacity: 0;
+      transition: opacity 3s ease-in-out;
+    }
+    .hide.show{
+      opacity: 1;
+    }
+    #shakebtn{
+      cursor: pointer;
+      font-weight: bold;
+      color: #444444;
+    }
+    </style>
+    <road-line></road-line>
+    <car-1 data-type="entity" id="car1" x="1100" y="600">
+      <img body src="../../images/car-1-body.png">
+      <img front-wheel src="../../images/car-1-f-wheel.png">
+      <img rear-wheel src="../../images/car-1-r-wheel.png">
+      <car-1-driver data-type="entity" id="car1-driver" x="245" y="195">
+        <img driver src="../../images/car-1-driver-whole.png">
+      </car-1-driver>
+    </car-1>
+    <truck-1 data-type="entity" id="truck1" x="-40" y="595">
+      <img body src="../../images/truck-1-body.png">
+      <img wheel src="../../images/truck-1-wheel.png">
+      <trash-can data-type="entity" id="trashcan1" x="20" y="0">
+        <img main src="../../images/bin-main-alt.png">
+        <img lid src="../../images/bin-lid-alt.png">
+      </trash-can>
+    </truck-1>
+    
+    <text-block id="text_authors" class="hide" x="175" y="555" width="300" height="30" fontsize="1.2">Leo Timmers and Gecko Press</text-block>
+    <text-block id="text_present" class="hide" x="475" y="555" width="100" height="30" fontsize="1.2">present</text-block>
+    <text-block id="text_animated" class="hide" rightalign x="594" y="720" width="400" height="30" fontsize="1.2">Animated by Michael Stevens</text-block>
+    <hint-box id="hintbox" x="8" y="8" class="hide">Shake the device to knock the trash can of the back of the truck (or <span id="shakebtn">Tap Here</span>).</hint-box>
+  </template>
+  <script>
+    Polymer({
+      entities: [],
+      animationStep: -1,
+      animate: function(app) {
+        switch(this.animationStep){
+          case -1:
+        	  this.transitionToStep0(app);
+        	  break;
+          case 0:
+            this.animateStep0(app);
+            break;
+          case 1:
+            this.animateStep1(app);
+            break;
+          case 2:
+            this.animateStep2(app);
+            break;
+        }
+      },
+      getSceneTime: function(app){
+        return (app.time_stamp - this.scene_start_time) / 1000;
+      },
+      transition: function(app){
+        this.scene_start_time = app.time_stamp;
+      },
+      transitionToStep0: function(app){
+        this.transition(app);
+        
+        this.$.car1.vel_x = this.$.car1.init_vel_x = -150;
+        this.animationStep = 0;
+      },
+      animateStep0: function(app){
+        if(!this.$.text_authors.classList.contains('show') && this.getSceneTime(app) > 0.5){
+          this.$.text_authors.classList.add('show');
+        }
+        if(!this.$.text_present.classList.contains('show') && this.getSceneTime(app) > 2){
+          this.$.text_present.classList.add('show');
+        }
+        if(!this.$.text_animated.classList.contains('show') && this.getSceneTime(app) > 4){
+          this.$.text_animated.classList.add('show');
+        }
+
+        this.$.car1.moveLeft(app, 650, -100, this.getSceneTime(app), 7);
+        this.$.truck1.animateDrive(app, -100);
+        if(this.$.car1.x == 650){
+          this.transitionToStep1(app);
+        }
+      },
+      transitionToStep1: function(app){
+        this.transition(app);
+        this.animationStep = 1;
+        this.$.hintbox.classList.add('show');
+        
+        this.shake_detect = new Shake({threshold: 15, timeout: 1000});
+        this.shake_detect.start();
+        var $this = this;
+        var on_shake = function(){
+          if($this.animateStep1_binJump) return;
+          
+          $this.$.text_authors.classList.remove('show');
+          $this.$.text_present.classList.remove('show');
+          $this.$.text_animated.classList.remove('show');
+          
+          $this.animateStep1_binJump = true;
+          $this.animateStep1_binJump_starttime = $this.getSceneTime(app);
+          //window.removeEventListener('shake', on_shake, false);
+          //this.shake_detect.stop();
+        }
+        Polymer.addEventListener(this.$.shakebtn, 'tap', on_shake);
+        window.addEventListener('shake', on_shake, false);
+      },
+      animateStep1: function(app){
+        this.$.car1.animateDrive(app, -100);
+        //this.$['car1-driver'].animateElbow(app, -200, 1.5);
+        this.$.truck1.animateDrive(app, -100);
+        
+        if(this.animateStep1_binJump){
+        	var dx = 25;
+        	if(this.$.trashcan1.x >= 20 + 2 * dx){
+            this.transitionToStep2(app);
+          }
+        	else{
+	          this.$.trashcan1.animateJump(app, dx, this.getSceneTime(app) - this.animateStep1_binJump_starttime, 2);
+	          if(this.$.trashcan1.x == this.$.trashcan1.init_x + dx){
+	            this.animateStep1_binJump = false;
+	            this.$.trashcan1.init_x = this.$.trashcan1.x;
+	          }
+        	}
+        }
+      },
+      transitionToStep2: function(app){
+        this.transition(app);
+        this.animationStep = 2;
+        this.$.car1.vel_x = 0;
+        this.$.truck1.vel_x = 0;
+        this.$.trashcan1.vel_x = 0;
+        this.$.car1.max_vel_x = 300;
+        this.$.truck1.max_vel_x = 300;
+        this.$.trashcan1.max_vel_x = 100;
+        this.$.car1.accel_x = -100;
+        this.$.truck1.accel_x = -100;
+        this.$.trashcan1.accel_x = 100;
+        
+        this.$.trashcan1.x = this.$.trashcan1.init_x = parseFloat(this.$.truck1.getAttribute('x')) + parseFloat(this.$.trashcan1.getAttribute('x')) + 30;
+        this.$.trashcan1.y = this.$.trashcan1.init_y = parseFloat(this.$.truck1.getAttribute('y')) + parseFloat(this.$.trashcan1.getAttribute('y')) - 70;
+        this.$.trashcan1.parentNode.parentNode.insertBefore(this.$.trashcan1.parentNode.removeChild(this.$.trashcan1), this.$.truck1);
+      },
+      animateStep2: function(app){
+    	  this.$.car1.animate(app);
+    	  this.$.car1.animateDrive(app, -100);
+        this.$.truck1.animate(app);
+        this.$.truck1.animateDrive(app, -100);
+        this.$.trashcan1.animateFall(app, 70, this.getSceneTime(app), 3, 1.5);
+        
+        if(this.$.car1.x < this.$.trashcan1.x + 100){
+        	this.parent.nextPage();
+        }
+      },
+      ready: function(){
+        this.entities = this.shadowRoot.querySelectorAll('[data-type="entity"]').array();
+        
+        this.entities.forEach(function(element, index, array){
+          element.classList.add('show-bones');
+        });
+      }
+    });
+  </script>
+</polymer-element>

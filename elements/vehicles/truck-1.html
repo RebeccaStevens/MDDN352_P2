@@ -5,9 +5,6 @@
 <polymer-element name="truck-1" extends="entity-bone-model">
   <template>
     <style>
-    :host{
-      position: relative;
-    }
 		:host(.show-bones) model-bone::shadow svg{
 		  display: block;
 		}
@@ -50,7 +47,7 @@
       },
       animate: function(app){
     	  this.super([app.time_step, 0]);
-    	  this.animateDrive(app, this.vel_x);
+        this.animateDrive(app, this.vel_x);
       },
       animateDrive: function(app, speed){
     	  this.animateWheel(app, 2.5 * speed);

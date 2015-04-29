@@ -1,0 +1,60 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../text-block/text-block.html">
+
+<polymer-element name="hint-box" attributes="x y">
+  <template>
+    <style>
+    :host{
+      position: absolute;
+      left: {{x}}px;
+      top: {{y}}px;
+    }
+    #text{
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    #text.show{
+      opacity: 1;
+    }
+    #btn{
+      color: blue;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #btn::shadow #icon{
+      height: 48px;
+      width: 48px;
+    }
+    :host(:not(.show)) > *{
+      display: none;
+    }
+    </style>
+    <paper-icon-button id="btn" icon="help" on-tap="{{toggleHint}}"></paper-icon-button>
+    <text-block id="text" x="72" y="8" width="400" height="30" fontsize="1.4">
+      <content></content>
+    </text-block>
+  </template>
+  <script>
+    Polymer({
+    	toggleHint: function(e, detail, sender){
+    		if(this.$.text.classList.contains('show')){
+    			this.hideHint();
+    		}
+    		else{
+    			this.showHint();
+    		}
+    	},
+    	hideHint: function(){
+    		this.$.text.classList.remove('show');
+    	},
+    	showHint: function(){
+    		this.$.text.classList.add('show');
+    	},
+      ready: function(){
+    	  
+      }
+    });
+  </script>
+</polymer-element>

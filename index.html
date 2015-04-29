@@ -8,16 +8,16 @@
   <meta name="mobile-web-app-capable" content="yes">
   
   <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+  <script src="bower_components/shake.js/shake.js"></script>
   <script src="app.js"></script>
   
   <link rel="stylesheet" href="app.css">
   
   <link rel="import" href="bower_components/polymer/polymer.html">
-  <link rel="import" href="elements/text-block/text-block.html">
-  <link rel="import" href="elements/road-line/road-line.html">
-  <link rel="import" href="elements/vehicles/car-1.html">
-  <link rel="import" href="elements/people/car-1-driver.html">
-  <link rel="import" href="elements/vehicles/truck-1.html">
+  <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
+  <link rel="import" href="elements/pages/page-cover.html">
+  <link rel="import" href="elements/pages/page-1.html">
+  <link rel="import" href="elements/pages/page-bang-1.html">
   
   <title>MDDN 352 Project 2</title>
   
@@ -30,8 +30,13 @@
       margin:0 auto;
       width:1024px;
       height:768px;
+      min-width:1024px;
+      min-height:768px;
+      max-width:1024px;
+      max-height:768px;
       background: #ffffff;
       overflow: hidden;
+      position: relative;
     }
     page-wrapper /deep/ * {
       
@@ -44,47 +49,25 @@
     <template>
       <style>
       :host{
-        position: relative;
+        
       }
       </style>
-      <text-block x="175" y="555" width="300" height="30" size="1.2">Leo Timmers and Gecko Press</text-block>
-      <text-block x="475" y="555" width="100" height="30" size="1.2">present</text-block>
-      <car-1 data-type="entity" id="car1" x="650" y="600">
-        <img body src="images/car-1-body.png">
-        <img front-wheel src="images/car-1-f-wheel.png">
-        <img rear-wheel src="images/car-1-r-wheel.png">
-        <car-1-driver data-type="entity" id="car1-driver" x="245" y="195">
-          <img driver src="images/car-1-driver-whole.png">
-        </car-1-driver>
-      </car-1>
-      <truck-1 data-type="entity" id="truck1" x="-40" y="595">
-        <img body src="images/truck-1-body.png">
-        <img wheel src="images/truck-1-wheel.png">
-      </truck-1>
-      <road-line></road-line>
+      <core-animated-pages fit selected="{{pageNumber}}" transitions="cross-fade-all">
+        <page-cover on-tap="{{nextPage}}"></page-cover>
+        <page-1 id="page1" parent="{{getThis()}}"></page-1>
+        <page-bang-1 on-tap="{{nextPage}}"></page-bang-1>
+      </core-animated-pages>
     </template>
     <script>
       Polymer({
-        entities: [],
-        pageNumber: 0,
-        time_stamp: 0,
-        time_step: 0,
-        start_time: 0,
+    	  pageNumber: 0,
         animate: function(frame_start_time) {
           this.time_stamp = (new Date()).getTime(); 
           this.time_step = (this.time_stamp - frame_start_time) / 1000;
           
-          //for(var i=0; i<this.entities.length; i++){
-        	//  this.entities[i].animate(this);
-          //}
-          
-          switch(this.pageNumber){
-	          case 1:
-	        	  this.animatePage1();
-	        	  break;
-	          case 2:
-              this.animatePage2();
-              break;
+          var page = this.$['page' + this.pageNumber];
+          if(page){
+        	  page.animate(this);
           }
           
           // request the next frame
@@ -93,31 +76,15 @@
             $this.animate($this.time_stamp);
           });
         },
-        transitionToPage1: function(){
-          this.pageNumber = 1;
-        },
-        animatePage1: function(){
-        	this.$.car1.animateDrive(this, -100);
-        	//this.$['car1-driver'].animateElbow(this, -200, 1.5);
-        	this.$.truck1.animateDrive(this, -100);
-        },
-        transitionToPage2: function(){
-          this.pageNumber = 2;
-          //this.$.car1.vel_x = -200;
-        },
-        animatePage2: function(){
-          
-        },
         ready: function(){
-        	this.entities = this.shadowRoot.querySelectorAll('[data-type="entity"]').array();
-          
-          this.entities.forEach(function(element, index, array){
-            element.classList.add('show-bones');
-          });
-          
-          this.transitionToPage1();
-          this.start_time = (new Date()).getTime();
+        	this.start_time = (new Date()).getTime();
           this.animate(this.start_time);
+        },
+        getThis: function(){
+        	return this;
+        },
+        nextPage: function(){
+        	this.pageNumber++;
         }
       });
     </script>
@@ -125,7 +92,7 @@
   
   <div flex></div>
   <div id="frame">
-    <page-wrapper></page-wrapper>
+    <page-wrapper fit></page-wrapper>
   </div>
   <div flex></div>
 </body>
